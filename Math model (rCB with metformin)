@@ -1,0 +1,68 @@
+# Визначені важливості ознак з моделі
+
+
+def simplified_predict_pCR (group, age, grade, er, pr, her2_neu, ki_67, cyclin_d1, protocol, T, N, multicentric):
+        feature_importances = {
+            'using of metformin group=absent, experemental group=present': 0.073,
+            'age': 0.135,
+            'Grade of tumor': 0.045,
+            'ER': 0.096,
+            'PR': 0.097,
+            'Her-2/neu': 0.064,
+            'Ki-67': 0.190,
+            'Cyclin D1': 0.102,
+            'protocol (4AC4N=1, 6TC=2, 6TP=3, 6TCH=4, 4AC4TC=5)': 0.052,
+            'T': 0.062,
+            'N': 0.051,
+            'mulricentric (0=absent, 1=present)': 0.030
+        }
+        normalized_probability = (feature_importances['using of metformin group=absent, experemental group=present'] * group +
+                          feature_importances['age'] * age +
+                          feature_importances['Grade of tumor'] * grade +
+                          feature_importances['ER'] * er / 100 +
+                          feature_importances['PR'] * pr / 100 +
+                          feature_importances['Her-2/neu'] * her2_neu +
+                          feature_importances['Ki-67'] * ki_67 / 100 +
+                          feature_importances['Cyclin D1'] * cyclin_d1 / 100 +
+                          feature_importances['protocol (4AC4N=1, 6TC=2, 6TP=3, 6TCH=4, 4AC4TC=5)'] * protocol +
+                          feature_importances['T'] * T +
+                          feature_importances['N'] * N +
+                          feature_importances['mulricentric (0=absent, 1=present)'] * multicentric
+                          ) / len(feature_importances)
+
+        return f"Емульована ймовірність досягнення pCR: {normalized_probability * 100:.2f}%"
+
+# Приклад використання
+inputs = {
+    'using of metformin group=absent, experemental group=present': 1,
+    'age': 60,
+    'Grade of tumor': 2,
+    'ER': 40,
+    'PR': 5,
+    'Her-2/neu': 0,
+    'Ki-67': 40,
+    'Cyclin D1': 30,
+    'protocol (4AC4N=1, 6TC=2, 6TP=3, 6TCH=4, 4AC4TC=5)': 2,
+    'T': 3,
+    'N': 1,
+    'mulricentric (0=absent, 1=present)': 1
+}
+
+group = float(input('using of metformin group=absent, experemental group=present: '))
+age = float(input('Enter value for "age": '))
+grade = float(input('Enter value for "Grade of tumor": '))
+ER = float(input('Enter value for "ER": '))
+PR = float(input('Enter value for "PR": '))
+Her_2_neu = float(input('Enter value for "Her-2/neu": '))
+Ki_67 = float(input('Enter value for "Ki-67": '))
+Cyclin_D1 = float(input('Enter value for "Cyclin D1": '))
+protocol = float(input('Enter value for "protocol" (1 for 4AC4N, 2 for 6TC, 3 for 6TP, 4 for 6TCH, 5 for 4AC4TC): '))
+T = float(input('Enter value for "T": '))
+N = float(input('Enter value for "N": '))
+multicentric = float(input('Enter value for "multicentric" (0 for absent, 1 for present): '))
+
+# for param in inputs:
+#     inputs[param] = int(input(param+": "))
+
+result = simplified_predict_pCR(group, age, grade, ER, PR, Her_2_neu, Ki_67, Cyclin_D1, protocol, T, N, multicentric)
+print(result)
